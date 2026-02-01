@@ -1,0 +1,38 @@
+argus_eye/
+├── backend/                    # Бэкенд FastAPI
+│   ├── api/
+│   │   ├── endpoints.py       # API маршруты
+│   │   └── schemas.py         # Pydantic модели
+│   ├── models/
+│   │   └── model_manager.py   # Загрузка YOLO
+│   ├── services/
+│   │   ├── detection_service.py # Оркестратор детекции
+│   │   ├── detector.py        # Ядро (SAHI + OpenVINO)
+│   │   └── export_service.py  # KML экспорт
+│   ├── utils/
+│   │   ├── database.py        # SQLite логика
+│   │   ├── geo_utils.py       # GPS и фотограмметрия
+│   │   ├── image_processor.py # Обработка изображений
+│   │   └── optimization.py    # Лимиты CPU
+│   ├── app.py                 # Точка входа FastAPI
+│   ├── config.py              # Глобальный конфиг
+│   └── requirements.txt       # Зависимости бэкенда
+├── frontend/                  # Фронтенд Streamlit
+│   ├── components/
+│   │   └── sidebar.py
+│   ├── pages/
+│   │   ├── 01_📤_Загрузка.py
+│   │   ├── 02_🗺️_Карта.py
+│   │   ├── 03_🔄_Сравнение.py
+│   │   └── 04_⚙️_Настройки.py
+│   ├── streamlit_app.py       # Главный экран
+│   └── requirements.txt       # Зависимости фронта
+├── uploads/                   # Загруженные изображения
+├── results/                   # Обработанные изображения
+├── exports/                   # Экспортированные файлы (KML, JSON)
+├── logs/                      # Логи системы
+├── docker-compose.yml         # Конфигурация Docker
+├── setup_optimized.sh         # Скрипт установки
+├── run_local.sh              # Скрипт запуска (Linux/macOS)
+├── run_win.bat               # Скрипт запуска (Windows)
+└── README_OPTIMIZED.md       # Документация

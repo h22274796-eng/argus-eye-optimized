@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  argus-eye:
+    build: .
+    container_name: argus-eye
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./results:/app/results
+      - ./exports:/app/exports
+      - ./logs:/app/logs
+      - ./backend/models:/app/backend/models
+    environment:
+      - USE_OPENVINO=true
+      - USE_ONNX=true
+      - USE_SAHI=true
+      - CPU_THREADS=2
+      - MAX_IMAGE_SIZE=1280
+    restart: unless-stopped
+    networks:
+      - argus-network
+
+networks:
+  argus-network:
+    driver: bridge
