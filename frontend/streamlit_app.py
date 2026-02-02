@@ -4,12 +4,13 @@ import requests
 # Настройки страницы
 st.set_page_config(page_title="Argus Eye", layout="wide")
 
-# Адрес API
-API_URL = "http://0.0.0.0:8001"
+# Исправленный адрес API: используем 127.0.0.1 и порт 8000
+API_URL = "http://127.0.0.1:8000"
 
 def check_api():
     try:
-        r = requests.get(f"{API_URL}/api/v1/health", timeout=1)
+        # Добавляем таймаут, чтобы интерфейс не зависал при поиске API
+        r = requests.get(f"{API_URL}/api/v1/health", timeout=2)
         return r.status_code == 200
     except:
         return False
@@ -21,10 +22,10 @@ is_online = check_api()
 if is_online:
     st.sidebar.success("● API: Online")
 else:
-    st.sidebar.error("○ API: Error")
+    st.sidebar.error("○ API: Offline")
+    st.sidebar.info(f"Ожидаемый адрес: {API_URL}")
     if st.sidebar.button("Обновить статус"):
-        if hasattr(st, "rerun"): st.rerun()
-        else: st.experimental_rerun()
+        st.rerun()
 
 # Меню
 menu = st.sidebar.selectbox("Меню", ["Загрузка", "История"])
@@ -40,13 +41,13 @@ if menu == "Загрузка":
     )
     
     if file:
-        st.image(file, caption="Загруженное фото", width=500)
+        st.image(file, caption="Загруженное фото")
         
         if is_online:
             if st.button("🚀 Начать анализ"):
-                with st.spinner("Нейросеть YOLO анализирует кадр..."):
+                with st.spinner("Нейросеть обрабатывает изображение..."):
                     try:
-                        # ПРАВИЛЬНЫЙ ФОРМАТ ОТПРАВКИ ФАЙЛА
+                        # Отправка файла на бэкенд
                         files = {"file": (file.name, file.getvalue(), file.type)}
                         res = requests.post(f"{API_URL}/api/v1/detect", files=files)
                         
@@ -59,18 +60,21 @@ if menu == "Загрузка":
                             if detections:
                                 st.subheader(f"Найдено объектов: {len(detections)}")
                                 for det in detections:
-                                    st.write(f"📍 **{det['class']}** (уверенность: {det['conf']:.2f})")
+                                    # В вашем API ключи 'class_name' и 'confidence' (согласно schemas.py)
+                                    name = det.get('class_name', 'Unknown')
+                                    conf = det.get('confidence', 0.0)
+                                    st.write(f"📍 **{name}** (уверенность: {conf:.2f})")
                             else:
                                 st.info("Объекты не обнаружены.")
                                 
                             with st.expander("Посмотреть сырой ответ (JSON)"):
                                 st.json(data)
                         else:
-                            st.error(f"Ошибка сервера: {res.status_code}. Проверьте консоль бэкенда.")
+                            st.error(f"Ошибка сервера: {res.status_code}")
                     except Exception as e:
                         st.error(f"Ошибка связи: {e}")
         else:
-            st.warning("⚠️ API недоступен. Анализ невозможен.")
+            st.warning("⚠️ API недоступен. Запустите backend/app.py")
 
 elif menu == "История":
     st.header("📜 История анализов")
@@ -78,6 +82,10 @@ elif menu == "История":
         try:
             res = requests.get(f"{API_URL}/api/v1/tasks")
             if res.status_code == 200:
-                st.table(res.json())
+                tasks = res.json()
+                if tasks:
+                    st.table(tasks)
+                else:
+                    st.info("История пуста.")
         except:
             st.error("Не удалось загрузить историю.")
