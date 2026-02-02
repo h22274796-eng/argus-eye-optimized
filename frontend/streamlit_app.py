@@ -5,7 +5,7 @@ import requests
 st.set_page_config(page_title="Argus Eye", layout="wide")
 
 # Адрес API
-API_URL = "http://127.0.0.1:8000"
+API_URL = "http://0.0.0.0:8001"
 
 def check_api():
     try:
