@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 st.set_page_config(page_title="Сравнение", layout="wide")
-API_URL = "http://127.0.0.1:8000/api/v1/compare"
+https://argus-eye-optimized.onrender.com/api/v1/compare
 
 st.title("🔄 Детекция изменений")
 

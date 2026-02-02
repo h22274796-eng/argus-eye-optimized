@@ -5,7 +5,7 @@ import requests
 st.set_page_config(page_title="Argus Eye", layout="wide")
 
 # Исправленный адрес API: используем 127.0.0.1 и порт 8000
-API_URL = "http://127.0.0.1:8000"
+API_URL = "https://argus-eye-optimized.onrender.com"
 
 def check_api():
     try:

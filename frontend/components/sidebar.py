@@ -12,7 +12,7 @@ def render_sidebar():
         # Статус API
         try:
             # ЗАМЕНЯЕМ localhost на 127.0.0.1 для стабильности
-            res = requests.get("http://127.0.0.1:8000/api/v1/health", timeout=2)
+            res = requests.get("https://argus-eye-optimized.onrender.com/api/v1/health", timeout=5)
             if res.status_code == 200:
                 st.success("● API: Connected")
             else:

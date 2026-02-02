@@ -4,7 +4,7 @@ import pandas as pd
 
 st.set_page_config(page_title="Карта объектов", layout="wide")
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "https://argus-eye-optimized.onrender.com"
 
 st.title("📍 Геолокация обнаруженных объектов")
 
